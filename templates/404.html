@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Not found — {{ site.name }}{% endblock %}
+{% block main %}
+<section class="hero">
+  <div class="wrap">
+    <span class="silk">HTTP 404 &middot; open circuit</span>
+    <h1 style="margin-top:1rem">No trace to that page</h1>
+    <p class="lede">The link is broken or the tutorial moved. The index below has everything that
+      is actually published.</p>
+    <div class="cta-row"><a class="btn" href="/tutorials/">Go to the tutorial index</a></div>
+  </div>
+</section>
+{% endblock %}

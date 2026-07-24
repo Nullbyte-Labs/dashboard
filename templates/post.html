@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — {{ site.name }}{% endblock %}
+{% block description %}{{ post.summary }}{% endblock %}
+{% block ogtype %}article{% endblock %}
+{% block canonical %}{{ post.url }}{% endblock %}
+
+{% block main %}
+<article>
+  <header class="article-head">
+    <div class="wrap">
+      <div class="kicker">
+        <span class="desig">{{ post.designator }}</span>
+        <span class="silk">{{ post.series_name }} &middot; {{ post.date_display }} &middot; {{ post.reading_minutes }} min read</span>
+      </div>
+      <h1>{{ post.title }}</h1>
+      <p class="lede">{{ post.summary }}</p>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="prose">
+      {% if post.video %}
+      <div class="embed">
+        <iframe src="{{ post.video }}" title="{{ post.title }}" loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+      {% endif %}
+      {{ post.body|safe }}
+    </div>
+
+    <nav class="pager" aria-label="More tutorials">
+      {% if older %}<a href="{{ older.url }}">&larr; {{ older.designator }} {{ older.title }}</a>{% else %}<span>&nbsp;</span>{% endif %}
+      {% if newer %}<a href="{{ newer.url }}">{{ newer.designator }} {{ newer.title }} &rarr;</a>{% else %}<span>&nbsp;</span>{% endif %}
+    </nav>
+  </div>
+</article>
+{% endblock %}

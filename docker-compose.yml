@@ -1,0 +1,32 @@
+# Self-hosted deployment: Caddy serves the built site, cloudflared publishes it.
+# No inbound ports are opened on the host or the router.
+#
+#   1. Build the site:   python3 build.py
+#   2. Put your tunnel token in .env as TUNNEL_TOKEN=...
+#   3. docker compose up -d
+#   4. In the Cloudflare dashboard, point the tunnel's public hostname
+#      nullbyte-labs.com at the service http://web:8080
+
+services:
+  web:
+    image: caddy:2-alpine
+    container_name: nbl-web
+    restart: unless-stopped
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv:ro
+    networks: [nbl]
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: nbl-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env}
+    depends_on: [web]
+    networks: [nbl]
+
+networks:
+  nbl:
+    driver: bridge

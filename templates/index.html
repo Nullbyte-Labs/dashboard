@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}{{ site.name }} — {{ site.tagline }}{% endblock %}
+
+{% block main %}
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="silk">Nullbyte Labs &middot; tutorials by {{ site.author }}</span>
+      <h1>Take it apart<span class="thin">then write it down.</span></h1>
+      <p class="lede">Video and long-form walkthroughs for people who learn by building: a lab that
+        actually works, badge hardware with the pads still exposed, and a first capture the flag
+        that ends in a solved challenge instead of a closed tab.</p>
+      <div class="cta-row">
+        <a class="btn" href="/tutorials/">Start with the tutorials</a>
+        <a class="btn ghost" href="{{ site.youtube }}" rel="noopener">Watch on YouTube</a>
+      </div>
+    </div>
+
+    <svg class="board" viewBox="0 0 560 340" role="img"
+         aria-label="Circuit traces routing from a chip labelled Nullbyte Labs to three test points: build the lab, open the hardware, play the game.">
+      <rect class="chip" x="26" y="34" width="118" height="90" rx="3"/>
+      <g stroke="#4fd3cb" stroke-width="1.4" opacity=".45">
+        <path d="M26 52h-14M26 72h-14M26 92h-14M26 112h-14"/>
+      </g>
+      <text x="85" y="76" text-anchor="middle" class="lit">NBL</text>
+      <text x="85" y="94" text-anchor="middle">CORE</text>
+
+      <path class="trace t1" d="M144 62 H300 L308 70 H392"/>
+      <path class="trace t2" d="M144 80 H240 L338 178 H392"/>
+      <path class="trace t3" d="M144 98 H180 L288 286 H392"/>
+
+      <circle class="ring" cx="400" cy="70" r="13"/>
+      <circle class="ring" cx="400" cy="178" r="13"/>
+      <circle class="ring" cx="400" cy="286" r="13"/>
+      <circle class="pad p1" cx="400" cy="70" r="6"/>
+      <circle class="pad p2" cx="400" cy="178" r="6"/>
+      <circle class="pad p3" cx="400" cy="286" r="6"/>
+
+      <text x="424" y="66" class="lit">K</text><text x="440" y="66">BUILD THE LAB</text>
+      <text x="424" y="174" class="lit">H</text><text x="440" y="174">OPEN THE HARDWARE</text>
+      <text x="424" y="282" class="lit">C</text><text x="440" y="282">PLAY THE GAME</text>
+    </svg>
+  </div>
+</section>
+
+<section class="section" id="series">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Three tracks, one bench</h2>
+      <span class="silk">Every tutorial carries its track letter</span>
+    </div>
+    <div class="series-grid">
+      {% for key, s in series.items() %}
+      <div class="series-cell">
+        <div class="prefix">{{ s.prefix }}</div>
+        <h3>{{ s.name }}</h3>
+        <p>{{ s.blurb }}</p>
+        <span class="count">{{ by_series[key]|length }} published</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" id="latest">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Latest tutorials</h2>
+      <a class="silk" href="/tutorials/">All tutorials &rarr;</a>
+    </div>
+    {% if posts %}
+    <ul class="list">
+      {% for post in posts[:5] %}
+      <li class="entry">
+        <span class="desig">{{ post.designator }}</span>
+        <div>
+          <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+          <p>{{ post.summary }}</p>
+        </div>
+        <div class="meta">
+          <span class="fmt">{{ 'VIDEO + WRITE-UP' if post.video else 'WRITE-UP' }}</span>
+          {{ post.date_display }} &middot; {{ post.reading_minutes }} MIN
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tutorials published yet. The first one lands with the first video.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap" style="max-width:70ch">
+    <div class="section-head"><h2>Who is doing the soldering</h2></div>
+    <p>Nullbyte Labs is {{ site.author }} — a cybersecurity engineer who builds adversarial
+      simulations for a living and conference badges for fun. The tutorials here are the notes
+      taken while figuring something out, cleaned up so the next person spends their time on the
+      interesting part instead of the setup.</p>
+    <p>Everything is aimed at people who are early but serious: you can follow a terminal,
+      you own a soldering iron or want to, and you would rather understand the attack than
+      copy the command. New tutorials land as a video and a write-up together.</p>
+    <p><a href="/feed.xml">Subscribe by RSS</a> or <a href="{{ site.youtube }}" rel="noopener">follow the channel</a>.</p>
+  </div>
+</section>
+{% endblock %}
