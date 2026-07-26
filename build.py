@@ -43,7 +43,7 @@ SITE = {
     "tagline": "Hardware hacking and security tutorials, from bench to breach.",
     "url": "https://nullbyte-labs.com",
     "author": "K0DA",
-    "youtube": "https://www.youtube.com/@MAX-P0W3R",
+    "youtube": "https://www.youtube.com/@Nullbyte-Labs",
     "github": "https://github.com/Nullbyte-Labs",
     "description": (
         "Long-form tutorials on lab setup, badge hardware hacking, and "
