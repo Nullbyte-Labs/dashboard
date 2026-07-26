@@ -51,20 +51,21 @@ SITE = {
     ),
 }
 
-# Silkscreen designator prefixes double as the series index.
+# Track labels shown as tags on every post. Plain and self-explanatory —
+# no cipher to learn. `slug` feeds the CSS modifier class (.tag--lab etc).
 SERIES = {
     "lab": {
-        "prefix": "K",
+        "label": "LAB",
         "name": "Build the lab",
         "blurb": "Get a working attack box and a target to point it at.",
     },
     "hardware": {
-        "prefix": "H",
+        "label": "HARDWARE",
         "name": "Open the hardware",
         "blurb": "Badges, headers, and the pads the vendor forgot to remove.",
     },
     "ctf": {
-        "prefix": "C",
+        "label": "CTF",
         "name": "Play the game",
         "blurb": "Capture the flag from first flag to first placement.",
     },
@@ -79,7 +80,6 @@ class Post:
     slug: str
     title: str
     date: dt.date
-    designator: str
     series: str
     summary: str
     body: str
@@ -87,6 +87,7 @@ class Post:
     video: str | None = None
     tags: list[str] = field(default_factory=list)
     reading_minutes: int = 1
+    track_number: int = 1  # position within its series, oldest = 1; set by load_posts()
 
     @property
     def url(self) -> str:
@@ -95,6 +96,10 @@ class Post:
     @property
     def series_name(self) -> str:
         return SERIES[self.series]["name"]
+
+    @property
+    def track_label(self) -> str:
+        return SERIES[self.series]["label"]
 
     @property
     def date_display(self) -> str:
@@ -116,7 +121,7 @@ def parse_post(path: Path) -> Post | None:
     if meta.get("draft"):
         return None
 
-    for key in ("title", "date", "designator", "series", "summary"):
+    for key in ("title", "date", "series", "summary"):
         if key not in meta:
             sys.exit(f"{path.name}: front matter missing '{key}'")
     if meta["series"] not in SERIES:
@@ -134,7 +139,6 @@ def parse_post(path: Path) -> Post | None:
         slug=meta.get("slug") or slugify(meta["title"]),
         title=meta["title"],
         date=date,
-        designator=meta["designator"],
         series=meta["series"],
         summary=meta["summary"],
         body=body,
@@ -147,7 +151,12 @@ def parse_post(path: Path) -> Post | None:
 
 def load_posts() -> list[Post]:
     posts = [p for f in sorted(CONTENT.glob("*.md")) if (p := parse_post(f))]
-    posts.sort(key=lambda p: p.date, reverse=True)
+    posts.sort(key=lambda p: p.date)  # oldest first, for stable per-series numbering
+    counters = {key: 0 for key in SERIES}
+    for p in posts:
+        counters[p.series] += 1
+        p.track_number = counters[p.series]
+    posts.sort(key=lambda p: p.date, reverse=True)  # newest first for display
     return posts
 
 

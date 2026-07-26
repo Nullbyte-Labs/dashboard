@@ -9,7 +9,7 @@
   <header class="article-head">
     <div class="wrap">
       <div class="kicker">
-        <span class="desig">{{ post.designator }}</span>
+        <span class="tag tag--{{ post.series }}">{{ post.track_label }} {{ '%02d'|format(post.track_number) }}</span>
         <span class="silk">{{ post.series_name }} &middot; {{ post.date_display }} &middot; {{ post.reading_minutes }} min read</span>
       </div>
       <h1>{{ post.title }}</h1>
@@ -30,8 +30,8 @@
     </div>
 
     <nav class="pager" aria-label="More tutorials">
-      {% if older %}<a href="{{ older.url }}">&larr; {{ older.designator }} {{ older.title }}</a>{% else %}<span>&nbsp;</span>{% endif %}
-      {% if newer %}<a href="{{ newer.url }}">{{ newer.designator }} {{ newer.title }} &rarr;</a>{% else %}<span>&nbsp;</span>{% endif %}
+      {% if older %}<a href="{{ older.url }}">&larr; {{ older.title }}</a>{% else %}<span>&nbsp;</span>{% endif %}
+      {% if newer %}<a href="{{ newer.url }}">{{ newer.title }} &rarr;</a>{% else %}<span>&nbsp;</span>{% endif %}
     </nav>
   </div>
 </article>

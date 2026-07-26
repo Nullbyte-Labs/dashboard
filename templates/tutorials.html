@@ -7,10 +7,10 @@
 {% block main %}
 <section class="hero" style="padding-block:clamp(2.5rem,6vw,4rem)">
   <div class="wrap">
-    <span class="silk">Index</span>
+    <span class="silk">Index &middot; new track, episodes landing regularly</span>
     <h1 style="margin-top:1rem">Tutorials</h1>
-    <p class="lede">Sorted newest first. The letter in each designator is the track: K for lab
-      builds, H for hardware, C for capture the flag.</p>
+    <p class="lede">Sorted newest first within each track: lab setup, hardware, and capture
+      the flag.</p>
   </div>
 </section>
 
@@ -19,13 +19,13 @@
   <div class="wrap">
     <div class="section-head">
       <h2>{{ s.name }}</h2>
-      <span class="silk">Prefix {{ s.prefix }} &middot; {{ by_series[key]|length }} published</span>
+      <span class="silk">{{ by_series[key]|length }} published</span>
     </div>
     {% if by_series[key] %}
     <ul class="list">
       {% for post in by_series[key] %}
       <li class="entry">
-        <span class="desig">{{ post.designator }}</span>
+        <span class="tag tag--{{ key }}">{{ s.label }} {{ '%02d'|format(post.track_number) }}</span>
         <div>
           <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
           <p>{{ post.summary }}</p>

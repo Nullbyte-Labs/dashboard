@@ -5,7 +5,7 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="silk">Nullbyte Labs &middot; tutorials by {{ site.author }}</span>
+      <span class="silk">Nullbyte Labs &middot; new track, episodes landing regularly</span>
       <h1>Take it apart<span class="thin">then write it down.</span></h1>
       <p class="lede">Video and long-form walkthroughs for people who learn by building: a lab that
         actually works, badge hardware with the pads still exposed, and a first capture the flag
@@ -52,7 +52,7 @@
     <div class="series-grid">
       {% for key, s in series.items() %}
       <div class="series-cell">
-        <div class="prefix">{{ s.prefix }}</div>
+        <span class="tag tag--{{ key }}">{{ s.label }}</span>
         <h3>{{ s.name }}</h3>
         <p>{{ s.blurb }}</p>
         <span class="count">{{ by_series[key]|length }} published</span>
@@ -72,7 +72,7 @@
     <ul class="list">
       {% for post in posts[:5] %}
       <li class="entry">
-        <span class="desig">{{ post.designator }}</span>
+        <span class="tag tag--{{ post.series }}">{{ post.track_label }} {{ '%02d'|format(post.track_number) }}</span>
         <div>
           <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
           <p>{{ post.summary }}</p>
