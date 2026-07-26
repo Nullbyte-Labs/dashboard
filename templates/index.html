@@ -2,105 +2,161 @@
 {% block title %}{{ site.name }} — {{ site.tagline }}{% endblock %}
 
 {% block main %}
-<section class="hero">
-  <div class="wrap hero-grid">
+<div class="wrap">
+<div class="bento" id="tracks">
+
+  <!-- HERO -->
+  <div class="card card--hero">
     <div>
-      <span class="silk">Nullbyte Labs &middot; new track, episodes landing regularly</span>
-      <h1>Take it apart<span class="thin">then write it down.</span></h1>
-      <p class="lede">Video and long-form walkthroughs for people who learn by building: a lab that
-        actually works, badge hardware with the pads still exposed, and a first capture the flag
-        that ends in a solved challenge instead of a closed tab.</p>
-      <div class="cta-row">
-        <a class="btn" href="/tutorials/">Start with the tutorials</a>
-        <a class="btn ghost" href="{{ site.youtube }}" rel="noopener">Watch on YouTube</a>
-      </div>
+      <span class="eyebrow">Self-hosted &middot; Tucson, AZ</span>
+      <h1 class="glitch" style="margin-top:0.6rem">Nullbyte<br>Labs</h1>
+      <p class="lede">From zero to hacker's bench: lab setup, badge hardware, and capture
+        the flag — written and filmed by {{ site.author }}.</p>
     </div>
-
-    <svg class="board" viewBox="0 0 560 340" role="img"
-         aria-label="Circuit traces routing from a chip labelled Nullbyte Labs to three test points: build the lab, open the hardware, play the game.">
-      <rect class="chip" x="26" y="34" width="118" height="90" rx="3"/>
-      <g stroke="#4fd3cb" stroke-width="1.4" opacity=".45">
-        <path d="M26 52h-14M26 72h-14M26 92h-14M26 112h-14"/>
-      </g>
-      <text x="85" y="76" text-anchor="middle" class="lit">NBL</text>
-      <text x="85" y="94" text-anchor="middle">CORE</text>
-
-      <path class="trace t1" d="M144 62 H300 L308 70 H392"/>
-      <path class="trace t2" d="M144 80 H240 L338 178 H392"/>
-      <path class="trace t3" d="M144 98 H180 L288 286 H392"/>
-
-      <circle class="ring" cx="400" cy="70" r="13"/>
-      <circle class="ring" cx="400" cy="178" r="13"/>
-      <circle class="ring" cx="400" cy="286" r="13"/>
-      <circle class="pad p1" cx="400" cy="70" r="6"/>
-      <circle class="pad p2" cx="400" cy="178" r="6"/>
-      <circle class="pad p3" cx="400" cy="286" r="6"/>
-
-      <text x="424" y="66" class="lit">K</text><text x="440" y="66">BUILD THE LAB</text>
-      <text x="424" y="174" class="lit">H</text><text x="440" y="174">OPEN THE HARDWARE</text>
-      <text x="424" y="282" class="lit">C</text><text x="440" y="282">PLAY THE GAME</text>
-    </svg>
-  </div>
-</section>
-
-<section class="section" id="series">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Three tracks, one bench</h2>
-      <span class="silk">Every tutorial carries its track letter</span>
-    </div>
-    <div class="series-grid">
-      {% for key, s in series.items() %}
-      <div class="series-cell">
-        <span class="tag tag--{{ key }}">{{ s.label }}</span>
-        <h3>{{ s.name }}</h3>
-        <p>{{ s.blurb }}</p>
-        <span class="count">{{ by_series[key]|length }} published</span>
-      </div>
-      {% endfor %}
+    <div class="btn-row">
+      <a class="btn btn--cyan" href="/tutorials/">&#9656; Tutorials</a>
+      <a class="btn btn--pink" href="{{ site.youtube }}" rel="noopener">&#9656; YouTube</a>
+      <a class="btn btn--ghost" href="{{ site.github }}" rel="noopener">&#9656; GitHub</a>
     </div>
   </div>
-</section>
 
-<section class="section" id="latest">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Latest tutorials</h2>
-      <a class="silk" href="/tutorials/">All tutorials &rarr;</a>
+  <!-- FEATURED / NEXT VIDEO -->
+  <div class="card card--video">
+    {% set featured = (posts|selectattr('video')|list)[:1]|first %}
+    {% if featured %}
+    <div class="embed">
+      <iframe src="{{ featured.video }}" title="{{ featured.title }}" loading="lazy"
+              allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+              allowfullscreen></iframe>
     </div>
-    {% if posts %}
-    <ul class="list">
-      {% for post in posts[:5] %}
-      <li class="entry">
-        <span class="tag tag--{{ post.series }}">{{ post.track_label }} {{ '%02d'|format(post.track_number) }}</span>
-        <div>
-          <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-          <p>{{ post.summary }}</p>
-        </div>
-        <div class="meta">
-          <span class="fmt">{{ 'VIDEO + WRITE-UP' if post.video else 'WRITE-UP' }}</span>
-          {{ post.date_display }} &middot; {{ post.reading_minutes }} MIN
-        </div>
+    <div class="video-meta">
+      <div>
+        <h3>Featured tutorial</h3>
+        <p>{{ featured.title }}</p>
+      </div>
+      <a class="icon-btn" href="{{ site.youtube }}" rel="noopener" aria-label="More on YouTube">&#9654;</a>
+    </div>
+    {% else %}
+    <div class="embed empty">
+      <p>First tutorial video is in production.<br>Subscribe to catch it on upload.</p>
+    </div>
+    <div class="video-meta">
+      <div>
+        <h3>Coming soon</h3>
+        <p>{{ site.author }} &middot; Nullbyte Labs</p>
+      </div>
+      <a class="icon-btn" href="{{ site.youtube }}" rel="noopener" aria-label="Visit YouTube channel">&#9654;</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- TRACK CARDS -->
+  {% for key, s in series.items() %}
+  <div class="card card--track card--track-{{ key }}">
+    <h3 class="card-title">{{ s.name }}</h3>
+    {% if by_series[key] %}
+    <ul class="stack">
+      {% for post in by_series[key][:4] %}
+      <li>
+        <a href="{{ post.url }}">
+          <span class="num">{{ '%02d'|format(post.track_number) }}</span>
+          <span class="row-title">{{ post.title }}</span>
+        </a>
       </li>
       {% endfor %}
     </ul>
     {% else %}
-    <p>No tutorials published yet. The first one lands with the first video.</p>
+    <p class="empty-note">Nothing published yet — first episode in this track is in
+      progress.</p>
     {% endif %}
   </div>
-</section>
+  {% endfor %}
 
-<section class="section" id="about">
-  <div class="wrap" style="max-width:70ch">
-    <div class="section-head"><h2>Who is doing the soldering</h2></div>
-    <p>Nullbyte Labs is {{ site.author }} — a cybersecurity engineer who builds adversarial
-      simulations for a living and conference badges for fun. The tutorials here are the notes
-      taken while figuring something out, cleaned up so the next person spends their time on the
-      interesting part instead of the setup.</p>
-    <p>Everything is aimed at people who are early but serious: you can follow along in a terminal,
-      you own a soldering iron or want to, and you would rather understand the attack than
-      copy the command. New tutorials land as a video and a write-up together.</p>
-    <p><a href="/feed.xml">Subscribe by RSS</a> or <a href="{{ site.youtube }}" rel="noopener">follow the channel</a>.</p>
+  <!-- STATUS -->
+  <div class="card card--status green">
+    <h3 class="card-title card-title--green">System status</h3>
+    <div class="status-row"><span>Site</span><span class="val"><span class="pulse"></span> live</span></div>
+    <div class="status-row"><span>Tutorials published</span><span class="val">{{ posts|length }}</span></div>
+    {% for key, s in series.items() %}
+    <div class="status-row"><span>{{ s.name }}</span><span class="val">{{ by_series[key]|length }}</span></div>
+    {% endfor %}
+    <div class="status-row"><span>Last build</span><span class="val">{{ build_stamp }}</span></div>
   </div>
-</section>
+
+  <!-- TERMINAL -->
+  <div class="card card--terminal">
+    <div class="term-bar">
+      <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+      <span class="term-label">bash &mdash; 80x24</span>
+    </div>
+    <div class="term-body" id="term"></div>
+  </div>
+
+  <!-- CONNECT -->
+  <div class="card card--connect">
+    <h3 class="card-title">Connect</h3>
+    <div class="connect-grid">
+      <a href="{{ site.youtube }}" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg>
+        YouTube
+      </a>
+      <a href="{{ site.github }}" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.7-1.4-1.7-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.7 5 18.7 5.3 18.7 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.7 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg>
+        GitHub
+      </a>
+      <a href="/feed.xml">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4a16 16 0 0 1 16 16h-3A13 13 0 0 0 4 7V4Zm0 6.5A9.5 9.5 0 0 1 13.5 20h-3A6.5 6.5 0 0 0 4 13.5v-3ZM6.5 17.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z"/></svg>
+        RSS Feed
+      </a>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="card card--about">
+    <h3 class="card-title">Who's behind this</h3>
+    <p>{{ site.author }} — a cybersecurity engineer who builds adversarial simulations for
+      a living and conference badges for fun. Aimed at people who are early but serious:
+      you can follow a terminal, you own a soldering iron or want to, and you'd rather
+      understand the attack than copy the command.</p>
+  </div>
+
+</div>
+</div>
+
+<script>
+  const lines = [
+    { text: "root@nullbyte-labs:~$ whoami", cls: "g" },
+    { text: "K0DA // adversarial simulation dev", cls: "m" },
+    { text: "root@nullbyte-labs:~$ cat status.txt", cls: "g" },
+    { text: "[+] tutorials: {{ posts|length }} published", cls: "m" },
+    { text: "[>] status: building in public", cls: "c" },
+  ];
+  const el = document.getElementById("term");
+  async function type() {
+    for (const line of lines) {
+      const div = document.createElement("div");
+      div.className = line.cls;
+      el.appendChild(div);
+      for (let i = 0; i <= line.text.length; i++) {
+        div.textContent = line.text.slice(0, i) + "\u2588";
+        await new Promise(r => setTimeout(r, 22));
+      }
+      div.textContent = line.text;
+      await new Promise(r => setTimeout(r, 220));
+    }
+    const last = el.lastElementChild;
+    if (last) {
+      setInterval(() => {
+        last.textContent = last.textContent.endsWith("\u2588")
+          ? last.textContent.slice(0, -1)
+          : last.textContent + "\u2588";
+      }, 600);
+    }
+  }
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    type();
+  } else {
+    el.innerHTML = lines.map(l => `<div class="${l.cls}">${l.text}</div>`).join("");
+  }
+</script>
 {% endblock %}
